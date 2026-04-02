@@ -7,6 +7,7 @@ import numpy as np
 import tempfile
 import subprocess
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 from collections import Counter
@@ -38,6 +39,14 @@ from PIL import Image
 import google.genai as genai
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, this can be restricted to the Vercel URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ---------------------------------------------------------------------------
 # Gemini Setup

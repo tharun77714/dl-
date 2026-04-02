@@ -43,7 +43,8 @@ export async function POST(req: NextRequest) {
     });
 
     try {
-      const { data: analysis } = await axios.post("http://localhost:8000/process", {
+      const PYTHON_API_URL = process.env.PYTHON_API_URL || "http://localhost:8000";
+      const { data: analysis } = await axios.post(`${PYTHON_API_URL}/process`, {
         video_path: filePath,
         interview_id: interview._id.toString(),
         transcript: transcript
