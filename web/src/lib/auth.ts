@@ -11,17 +11,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider === "google") {
-        await dbConnect();
-        const existingUser = await User.findOne({ email: user.email });
-
-        if (!existingUser) {
-          await User.create({
-            name: user.name,
-            email: user.email,
-            image: user.image,
-          });
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user.email) {
+        try {
+          await dbConnect();
+          // Upsert so new users are allowed; avoids duplicate-key races on concurrent sign-ins
+          await User.findOneAndUpdate(
+            { email: user.email },
+            {
+              $set: {
+                name: user.name ?? "User",
+                email: user.email,
+                image: user.image,
+              },
+            },
+            { upsert: true, new: true }
+          );
+        } catch (e) {
+          console.error("[NextAuth] MongoDB signIn error:", e);
+          return false;
         }
       }
       return true;

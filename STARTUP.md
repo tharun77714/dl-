@@ -19,6 +19,18 @@ Then open: http://localhost:3000
 
 ---
 
+## Google sign-in for teammates (authorization / “blocked” errors)
+
+Your app **does** allow new users (first Google login creates a MongoDB user). If a friend sees **Google authorization** or **Access blocked**, it is usually **Google Cloud OAuth**, not missing signup:
+
+1. **OAuth consent screen is in “Testing”** — Only emails listed under **Test users** can sign in. In [Google Cloud Console](https://console.cloud.google.com/) → **APIs & Services** → **OAuth consent screen** → add each collaborator’s Google email under **Test users**, or **Publish** the app (may require verification for sensitive scopes).
+2. **Redirect URI** — Under **Credentials** → your OAuth 2.0 Client → **Authorized redirect URIs** must include exactly:
+   - `http://localhost:3000/api/auth/callback/google` (and your production URL if deployed).
+   If someone uses `http://127.0.0.1:3000`, add that variant too or always use `localhost`.
+3. **MongoDB Atlas** — **Network Access** must allow the friend’s IP (or `0.0.0.0/0` for dev). If MongoDB fails during sign-in, login can fail after Google succeeds.
+
+---
+
 ## Check Server is Running
 
 Open http://localhost:8000 — you should see:
