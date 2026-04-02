@@ -26,6 +26,9 @@ pnpm-debug.log*
 ## App-generated uploads (do not commit)
 web/public/uploads/
 
+## Local test media
+api/dummy.wav
+
 ## OS / IDE
 .DS_Store
 Thumbs.db
