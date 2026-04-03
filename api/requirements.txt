@@ -10,11 +10,14 @@ torchvision
 torchaudio
 Pillow
 google-generativeai
+groq
 python-dotenv
 requests
 supabase
 mediapipe
 librosa
-parselmouth
+praat-parselmouth
 imageio-ffmpeg
 openai
+pymongo
+PyPDF2
