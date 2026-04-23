@@ -110,7 +110,7 @@ export default function SmartResumePage() {
       form.append('target_company', targetCompany);
       form.append('job_description', jobDescription);
 
-      const res = await fetch('http://localhost:8000/api/smart-resume/generate', { method: 'POST', body: form });
+      const res = await fetch('/api/smart-resume/generate', { method: 'POST', body: form });
       const data = await res.json();
       
       if (!res.ok || !data.success) { 

@@ -7,6 +7,7 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import axios from "axios";
 import { getInterviewsBucket, getSupabaseAdmin } from "@/lib/supabase-server";
+import { getPythonApiBaseUrl, getPythonApiJsonHeaders } from "@/lib/python-api";
 
 function safePathSegment(id: string): string {
   return String(id).replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 200);
@@ -89,13 +90,19 @@ export async function POST(req: NextRequest) {
     });
 
     try {
-      const PYTHON_API_URL = process.env.PYTHON_API_URL || "http://localhost:8000";
-      const { data: analysis } = await axios.post(`${PYTHON_API_URL}/process`, {
-        video_path: filePath,
-        interview_id: interview._id.toString(),
-        transcript,
-        user_id: userId,
-      });
+      const PYTHON_API_URL = getPythonApiBaseUrl();
+      const { data: analysis } = await axios.post(
+        `${PYTHON_API_URL}/process`,
+        {
+          video_path: filePath,
+          interview_id: interview._id.toString(),
+          transcript,
+          user_id: userId,
+        },
+        {
+          headers: getPythonApiJsonHeaders(),
+        }
+      );
 
       await Interview.findByIdAndUpdate(interview._id, {
         analysis: {
